@@ -1,16 +1,19 @@
 const express = require('express');
 const router = express.Router();
-
 const Post = require('../models/post.model');
+
 
 router.get('/posts', async (req, res) => {
   try {
     const result = await Post
       .find({status: 'published'})
-      .select('author created title photo')
+      .select('author created title photo price _id')
       .sort({created: -1});
-    if(!result) res.status(404).json({ post: 'Not found' });
-    else res.json({result});
+      setTimeout(() => {
+        if(!result) res.status(404).json({ post: 'Not found' });
+        else res.json(result);
+      },1000);
+    
   }
   catch(err) {
     res.status(500).json(err);
@@ -31,11 +34,14 @@ router.get('/posts/:id', async (req, res) => {
 
 router.post('/posts/', async (req, res) => {
   try {
-    const post = new Post({...req.body.offer, status: 'published'});
-    console.log('post', post);
+    let post = new Post({...req.body});
+
+    post.created = new Date();
+    post.updated = post.created;
+    post.status = 'published';
+
     const newPost = await post.save();
-    console.log(newPost);
-    if(newPost) res.status(201).json({ newPost });
+    if(newPost) res.status(201).json({ message: 'Post Added!', post: newPost });
   }
   catch(err) {
     console.log(err);
