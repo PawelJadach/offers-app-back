@@ -10,7 +10,7 @@ router.get('/posts', async (req, res) => {
       .select('author created title photo')
       .sort({created: -1});
     if(!result) res.status(404).json({ post: 'Not found' });
-    else res.json(result);
+    else res.json({result});
   }
   catch(err) {
     res.status(500).json(err);
@@ -25,6 +25,20 @@ router.get('/posts/:id', async (req, res) => {
     else res.json(result);
   }
   catch(err) {
+    res.status(500).json(err);
+  }
+});
+
+router.post('/posts/', async (req, res) => {
+  try {
+    const post = new Post({...req.body.offer, status: 'published'});
+    console.log('post', post);
+    const newPost = await post.save();
+    console.log(newPost);
+    if(newPost) res.status(201).json({ newPost });
+  }
+  catch(err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
