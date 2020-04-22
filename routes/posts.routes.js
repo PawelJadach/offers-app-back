@@ -34,17 +34,15 @@ router.get('/posts/:id', async (req, res) => {
 
 router.post('/posts/', async (req, res) => {
   try {
-    let post = new Post({...req.body});
+    const created = new Date();
+    let post = await new Post({...req.body, created, 'updated': created, 'status': 'published'});
 
-    post.created = new Date();
-    post.updated = post.created;
-    post.status = 'published';
+    console.log(post);
 
     const newPost = await post.save();
-    if(newPost) res.status(201).json({ message: 'Post Added!', post: newPost });
+    if(newPost) res.status(201).json({ message: 'Post Added!', newPost });
   }
   catch(err) {
-    console.log(err);
     res.status(500).json(err);
   }
 });
