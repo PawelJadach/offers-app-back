@@ -9,10 +9,9 @@ router.get('/posts', async (req, res) => {
       .find({status: 'published'})
       .select('author created title photo price _id')
       .sort({created: -1});
-      setTimeout(() => {
-        if(!result) res.status(404).json({ post: 'Not found' });
-        else res.json(result);
-      },1000);
+      if(!result) res.status(404).json({ post: 'Not found' });
+      else res.json(result);
+
     
   }
   catch(err) {
