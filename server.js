@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const dbString = require('./private/config');
+// const dbString = require('./private/config');
 
 const postsRoutes = require('./routes/posts.routes');
 
